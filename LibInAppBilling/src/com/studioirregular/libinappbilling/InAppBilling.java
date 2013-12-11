@@ -107,6 +107,12 @@ public class InAppBilling {
 		}		
 		
 		Bundle purchases = getPurchases(getService(), type);
+		if (DEBUG_LOG) {
+			for (String key : purchases.keySet()) {
+				Log.d(Constants.LOG_TAG,
+						"\tpurchases[" + key + "]:" + purchases.get(key));
+			}
+		}
 		
 		return processGetPurchasesResult(purchases);
 	}
@@ -145,6 +151,9 @@ public class InAppBilling {
 		}
 		
 		PendingIntent intent = getPurchaseIntent(type, productId);
+		if (DEBUG_LOG) {
+			Log.w(Constants.LOG_TAG, "purchaseIntent:" + intent);
+		}
 		
 		activity.startIntentSenderForResult(intent.getIntentSender(),
 				activityRequestCode, new Intent(), Integer.valueOf(0),
