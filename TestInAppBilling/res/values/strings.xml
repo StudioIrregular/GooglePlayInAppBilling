@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">TestInAppBilling</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="purchased">purchased</string>
+    <string name="canceled">canceled</string>
+    <string name="refunded">refunded</string>
+    <string name="unavailable">unavailable</string>
+    <string name="product_syphon">Syphon Tool</string>
+    <string name="get_sku_details">Get Sku Details</string>
+    <string name="purchase">Purchase</string>
+    <string name="purchased_list">Purchased Product List</string>
+    <string name="consume">Consume</string>
+
+</resources>
