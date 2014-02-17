@@ -2,19 +2,12 @@ package com.studioirregular.testinappbilling;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-
-import org.json.JSONException;
 
 import android.app.Activity;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
@@ -22,23 +15,12 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.android.vending.billing.IInAppBillingService;
-import com.studioirregular.libinappbilling.API_consumePurchase;
-import com.studioirregular.libinappbilling.API_getBuyIntent;
-import com.studioirregular.libinappbilling.API_getPurchases;
-import com.studioirregular.libinappbilling.API_getSkuDetails;
-import com.studioirregular.libinappbilling.API_isBillingSupported;
-import com.studioirregular.libinappbilling.HandleGetBuyIntentResult;
-import com.studioirregular.libinappbilling.HandleGetPurchasesResult;
-import com.studioirregular.libinappbilling.HandlePurchaseActivityResult;
-import com.studioirregular.libinappbilling.IabServiceConnection;
 import com.studioirregular.libinappbilling.InAppBilling;
+import com.studioirregular.libinappbilling.InAppBilling.NotSupportedException;
+import com.studioirregular.libinappbilling.InAppBilling.ServiceNotReadyException;
 import com.studioirregular.libinappbilling.Product;
 import com.studioirregular.libinappbilling.PurchasedItem;
 import com.studioirregular.libinappbilling.ServerResponseCode;
-import com.studioirregular.libinappbilling.SignatureVerificationException;
-import com.studioirregular.libinappbilling.InAppBilling.NotSupportedException;
-import com.studioirregular.libinappbilling.InAppBilling.ServiceNotReadyException;
 
 public class TestInAppBilling extends Activity {
 
@@ -87,24 +69,21 @@ public class TestInAppBilling extends Activity {
 	}
 	
 	@Override
-	protected void onResume() {
-		super.onResume();
-		
-		if (iab.isReady()) {
-			updatePurchasedProducts();
-		}
-	}
-
-	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		
 		Log.d(TAG, "onActivityResult requestCode:" + requestCode
 				+ ",resultCode:" + resultCode + ",data:" + data);
 		
 		if (requestCode == PURCHASE_ACITIVITY_CODE) {
-			ServerResponseCode response = iab.onPurchaseActivityResult(resultCode, data);
-			Log.w(TAG, "Purchase response:" + response);
-			updatePurchasedProducts();
+			
+			if (resultCode == Activity.RESULT_OK) {
+				ServerResponseCode response = iab.onPurchaseActivityResult(data);
+				Log.w(TAG, "Purchase response:" + response);
+				updatePurchasedProducts();
+			} else if (resultCode == Activity.RESULT_CANCELED) {
+				Log.w(TAG, "onActivityResult: user canceled purchasing.");
+				Toast.makeText(TestInAppBilling.this, R.string.purchase_canceled, Toast.LENGTH_LONG).show();
+			}
 		} else {
 			super.onActivityResult(requestCode, resultCode, data);
 		}

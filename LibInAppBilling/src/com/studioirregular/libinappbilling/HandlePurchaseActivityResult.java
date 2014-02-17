@@ -3,11 +3,12 @@ package com.studioirregular.libinappbilling;
 import org.json.JSONException;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 
 /*
- * This class process Intent data in onActivityResult (results from startActivity with 
- * pending intent from IAB API: getBuyIntent).
+ * This class process purchase resulted intent data, as described in: 
+ * http://developer.android.com/google/play/billing/billing_reference.html#getBuyIntent
  */
 public class HandlePurchaseActivityResult {
 
@@ -22,38 +23,21 @@ public class HandlePurchaseActivityResult {
 			Log.d(Constants.LOG_TAG, "HandlePurchaseActivityResult");
 		}
 		
-		verifyInput(data);
-		
-		this.data = data;
-	}
-	
-	public boolean isPurchaseSuccessful() {
-		
 		if (data == null) {
-			
-			if (DEBUG_LOG) {
-				Log.e(Constants.LOG_TAG,
-						"HandlePurchaseActivityResult::isPurchaseSuccessful: invalid intent data:" + data);
-			}
-			return false;
-		}
-		
-		ServerResponseCode response = new ServerResponseCode(data);
-		
-		if (!response.isOK()) {
-			if (DEBUG_LOG) {
-				Log.e(Constants.LOG_TAG,
-						"HandlePurchaseActivityResult::isPurchaseSuccessful: response code not ok, code:" + response.value);
-			}
-			return false;
+			throw new IllegalArgumentException("Invalid intent data:" + data);
 		}
 		
 		if (DEBUG_LOG) {
-			Log.d(Constants.LOG_TAG,
-					"HandlePurchaseActivityResult::isPurchaseSuccessful: true");
+			Bundle extras = data.getExtras();
+			if (extras != null) {
+				Log.d(Constants.LOG_TAG, "\tdata.extras:");
+				for (String key : extras.keySet()) {
+					Log.d(Constants.LOG_TAG, "\t\t[" + key + "] : " + extras.get(key));
+				}
+			}
 		}
 		
-		return true;
+		this.data = data;
 	}
 	
 	public ServerResponseCode getResponseCode() {
@@ -82,23 +66,6 @@ public class HandlePurchaseActivityResult {
 		}		
 		
 		return new PurchasedItem(purchaseData);
-	}
-	
-	private void verifyInput(Intent data) throws IllegalArgumentException {
-		
-		if (data == null) {
-			throw new IllegalArgumentException("Invalid intent data:" + data);
-		}
-		
-		if (!data.hasExtra(KEY_PURCHASE_DATA)) {
-			throw new IllegalArgumentException("Expect intent extra has key:"
-					+ KEY_PURCHASE_DATA);
-		}
-		
-		if (!data.hasExtra(KEY_DATA_SIGNATURE)) {
-			throw new IllegalArgumentException("Expect intent extra has key:"
-					+ KEY_DATA_SIGNATURE);
-		}
 	}
 	
 	private static final String KEY_PURCHASE_DATA  = "INAPP_PURCHASE_DATA";

@@ -250,12 +250,11 @@ public class InAppBilling {
 	 * purchase API. When user canceled the purchase, client can get this info
 	 * through result code or ServerResponseCode.
 	 */
-	public ServerResponseCode onPurchaseActivityResult(int resultCode, Intent data) {
+	public ServerResponseCode onPurchaseActivityResult(Intent data) {
 		
 		if (DEBUG_LOG) {
 			Log.d(Constants.LOG_TAG,
-					"InAppBilling::onActivityResult resultCode:" + resultCode
-							+ ",data:" + data);
+					"InAppBilling::onActivityResult data:" + data);
 		}
 		
 		if (data == null) {
