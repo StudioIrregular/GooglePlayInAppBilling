@@ -14,16 +14,14 @@ import com.android.vending.billing.IInAppBillingService;
 
 public class IabServiceConnection {
 
-	private static final boolean DEBUG_LOG = true;
-	
 	public IabServiceConnection(Context context) {
 		this.context = context;
 	}
 	
 	public void observeConnectionStatus(Observer ob) {
 		
-		if (DEBUG_LOG) {
-			Log.d(Constants.LOG_TAG,
+		if (Global.DEBUG_LOG) {
+			Log.d(Global.LOG_TAG,
 					"IabServiceConnection::observeConnectionStatus ob:" + ob);
 		}
 		
@@ -34,8 +32,8 @@ public class IabServiceConnection {
 	
 	public void unregisterConnectionStatus(Observer ob) {
 		
-		if (DEBUG_LOG) {
-			Log.d(Constants.LOG_TAG,
+		if (Global.DEBUG_LOG) {
+			Log.d(Global.LOG_TAG,
 					"IabServiceConnection::unregisterConnectionStatus ob:" + ob);
 		}
 		
@@ -46,12 +44,12 @@ public class IabServiceConnection {
 	
 	public boolean bindService() {
 		
-		if (DEBUG_LOG) {
-			Log.d(Constants.LOG_TAG, "IabServiceConnection::bindSerice");
+		if (Global.DEBUG_LOG) {
+			Log.d(Global.LOG_TAG, "IabServiceConnection::bindSerice");
 		}
 		
 		if (context == null) {
-			Log.e(Constants.LOG_TAG, "invalid context value: + context");
+			Log.e(Global.LOG_TAG, "invalid context value: + context");
 			return false;
 		}
 		
@@ -61,20 +59,20 @@ public class IabServiceConnection {
 					serviceConnection, Context.BIND_AUTO_CREATE);
 			
 			if (result == false) {
-				Log.e(Constants.LOG_TAG, "failed to bind service.");
+				Log.e(Global.LOG_TAG, "failed to bind service.");
 			}
 			
 			return result;
 		} catch (SecurityException e) {
-			Log.e(Constants.LOG_TAG, "bind service exception:" + e);
+			Log.e(Global.LOG_TAG, "bind service exception:" + e);
 			return false;
 		}
 	}
 	
 	public void unbindService() {
 		
-		if (DEBUG_LOG) {
-			Log.d(Constants.LOG_TAG, "IabServiceConnection::unbindService");
+		if (Global.DEBUG_LOG) {
+			Log.d(Global.LOG_TAG, "IabServiceConnection::unbindService");
 		}
 		
 		if (context != null) {
@@ -95,8 +93,8 @@ public class IabServiceConnection {
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			
-			if (DEBUG_LOG) {
-				Log.d(Constants.LOG_TAG,
+			if (Global.DEBUG_LOG) {
+				Log.d(Global.LOG_TAG,
 						"IabServiceConnection::serviceConnection::onServiceConnected name:"
 								+ name);
 			}
@@ -111,8 +109,8 @@ public class IabServiceConnection {
 
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
-			if (DEBUG_LOG) {
-				Log.d(Constants.LOG_TAG,
+			if (Global.DEBUG_LOG) {
+				Log.d(Global.LOG_TAG,
 						"IabServiceConnection::serviceConnection::onServiceDisconnected name:"
 								+ name);
 			}

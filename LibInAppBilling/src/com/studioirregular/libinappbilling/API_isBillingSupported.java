@@ -8,7 +8,7 @@ public class API_isBillingSupported extends API_base<ServerResponseCode> {
 
 	@Override
 	protected boolean DEBUG_LOG() {
-		return true;
+		return Global.DEBUG_LOG;
 	}
 	
 	@Override

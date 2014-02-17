@@ -10,8 +10,6 @@ import android.util.Log;
 
 public class HandleGetPurchasesResult {
 
-	private static final boolean DEBUG_LOG = true;
-	
 	private String publicKeyBase64;
 	private Bundle bundle;
 	
@@ -41,8 +39,8 @@ public class HandleGetPurchasesResult {
 			final boolean pass = Security.verifyPurchase(publicKeyBase64, data,
 					signature);
 			if (!pass) {
-				if (DEBUG_LOG) {
-					Log.e(Constants.LOG_TAG,
+				if (Global.DEBUG_LOG) {
+					Log.e(Global.LOG_TAG,
 							"HandleGetPurchasesResult::execute() Signature verification failed for product id:"
 									+ id);
 				}

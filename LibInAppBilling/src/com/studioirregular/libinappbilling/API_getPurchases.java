@@ -13,7 +13,7 @@ public class API_getPurchases extends API_base<Bundle> {
 
 	@Override
 	protected boolean DEBUG_LOG() {
-		return true;
+		return Global.DEBUG_LOG;
 	}
 	
 	@Override

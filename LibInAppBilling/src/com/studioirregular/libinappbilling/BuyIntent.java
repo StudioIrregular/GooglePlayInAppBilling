@@ -6,12 +6,10 @@ import android.util.Log;
 
 public class BuyIntent {
 
-	private static final boolean DEBUG_LOG = true;
-	
 	public BuyIntent(Bundle apiResult) {
 		
-		if (DEBUG_LOG) {
-			Log.d(Constants.LOG_TAG, "BuyIntent: apiResult:" + apiResult);
+		if (Global.DEBUG_LOG) {
+			Log.d(Global.LOG_TAG, "BuyIntent: apiResult:" + apiResult);
 		}
 		
 		this.apiResult = apiResult;

@@ -54,7 +54,7 @@ public class Security {
      */
     public static boolean verifyPurchase(String base64PublicKey, String signedData, String signature) {
         if (signedData == null) {
-            Log.e(Constants.LOG_TAG, "Security::verifyPurchase: data is null");
+            Log.e(Global.LOG_TAG, "Security::verifyPurchase: data is null");
             return false;
         }
 
@@ -63,7 +63,7 @@ public class Security {
             PublicKey key = Security.generatePublicKey(base64PublicKey);
             verified = Security.verify(key, signedData, signature);
 			if (!verified) {
-				Log.w(Constants.LOG_TAG,
+				Log.w(Global.LOG_TAG,
 						"Security::verifyPurchase: signature does not match data.");
 				return false;
 			}
@@ -86,10 +86,10 @@ public class Security {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         } catch (InvalidKeySpecException e) {
-            Log.e(Constants.LOG_TAG, "Invalid key specification.");
+            Log.e(Global.LOG_TAG, "Invalid key specification.");
             throw new IllegalArgumentException(e);
         } catch (IllegalArgumentException e) {
-            Log.e(Constants.LOG_TAG, "Base64 decoding failed.");
+            Log.e(Global.LOG_TAG, "Base64 decoding failed.");
             throw new IllegalArgumentException(e);
         }
     }
@@ -110,19 +110,19 @@ public class Security {
             sig.initVerify(publicKey);
             sig.update(signedData.getBytes());
             if (!sig.verify(Base64.decode(signature, Base64.DEFAULT))) {
-				Log.e(Constants.LOG_TAG,
+				Log.e(Global.LOG_TAG,
 						"Security::verify: Signature verification failed.");
                 return false;
             }
             return true;
         } catch (NoSuchAlgorithmException e) {
-            Log.e(Constants.LOG_TAG, "NoSuchAlgorithmException.");
+            Log.e(Global.LOG_TAG, "NoSuchAlgorithmException.");
         } catch (InvalidKeyException e) {
-            Log.e(Constants.LOG_TAG, "Invalid key specification.");
+            Log.e(Global.LOG_TAG, "Invalid key specification.");
         } catch (SignatureException e) {
-            Log.e(Constants.LOG_TAG, "Signature exception.");
+            Log.e(Global.LOG_TAG, "Signature exception.");
         } catch (IllegalArgumentException e) {
-            Log.e(Constants.LOG_TAG, "Base64 decoding failed.");
+            Log.e(Global.LOG_TAG, "Base64 decoding failed.");
         }
         return false;
     }

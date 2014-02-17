@@ -7,8 +7,6 @@ import android.util.Log;
 
 public class PurchasedItem {
 
-	private static final boolean DEBUG_LOG = true;
-	
 	public String orderId;
 	
 	public String packageName;
@@ -44,8 +42,8 @@ public class PurchasedItem {
 	
 	public PurchasedItem(String jsonString) throws JSONException {
 		
-		if (DEBUG_LOG) {
-			Log.d(Constants.LOG_TAG, "PurchasedItem: jsonString:" + jsonString);
+		if (Global.DEBUG_LOG) {
+			Log.d(Global.LOG_TAG, "PurchasedItem: jsonString:" + jsonString);
 		}
 		
 		parse(new JSONObject(jsonString));

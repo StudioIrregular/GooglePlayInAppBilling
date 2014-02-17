@@ -12,27 +12,25 @@ import android.util.Log;
  */
 public class HandlePurchaseActivityResult {
 
-	private static final boolean DEBUG_LOG = true;
-	
 	private Intent data;
 	
 	public HandlePurchaseActivityResult(Intent data)
 			throws IllegalArgumentException {
 		
-		if (DEBUG_LOG) {
-			Log.d(Constants.LOG_TAG, "HandlePurchaseActivityResult");
+		if (Global.DEBUG_LOG) {
+			Log.d(Global.LOG_TAG, "HandlePurchaseActivityResult");
 		}
 		
 		if (data == null) {
 			throw new IllegalArgumentException("Invalid intent data:" + data);
 		}
 		
-		if (DEBUG_LOG) {
+		if (Global.DEBUG_LOG) {
 			Bundle extras = data.getExtras();
 			if (extras != null) {
-				Log.d(Constants.LOG_TAG, "\tdata.extras:");
+				Log.d(Global.LOG_TAG, "\tdata.extras:");
 				for (String key : extras.keySet()) {
-					Log.d(Constants.LOG_TAG, "\t\t[" + key + "] : " + extras.get(key));
+					Log.d(Global.LOG_TAG, "\t\t[" + key + "] : " + extras.get(key));
 				}
 			}
 		}
@@ -48,8 +46,8 @@ public class HandlePurchaseActivityResult {
 	public PurchasedItem getPurchasedItem(String publicKeyBase64)
 			throws SignatureVerificationException, JSONException {
 		
-		if (DEBUG_LOG) {
-			Log.d(Constants.LOG_TAG,
+		if (Global.DEBUG_LOG) {
+			Log.d(Global.LOG_TAG,
 					"HandlePurchaseActivityResult::getPurchasedItem: publicKeyBase64:"
 							+ publicKeyBase64);
 		}

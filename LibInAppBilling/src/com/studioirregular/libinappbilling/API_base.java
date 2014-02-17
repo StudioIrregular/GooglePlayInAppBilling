@@ -44,7 +44,7 @@ public abstract class API_base <ResultType> {
 			throws IllegalArgumentException, RemoteException {
 		
 		if (DEBUG_LOG()) {
-			Log.d(Constants.LOG_TAG, DEBUG_NAME() + " execute");
+			Log.d(Global.LOG_TAG, DEBUG_NAME() + " execute");
 		}
 		
 		checkArguments();
@@ -60,7 +60,7 @@ public abstract class API_base <ResultType> {
 		
 		if (LOG_API_EXECUTION_TIME) {
 			final long executionTime = stopWatch.stop();
-			Log.w(Constants.LOG_TAG, DEBUG_NAME() + " executionTime:" + executionTime);
+			Log.w(Global.LOG_TAG, DEBUG_NAME() + " executionTime:" + executionTime);
 		}
 		
 		return result;

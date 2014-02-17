@@ -21,8 +21,6 @@ import com.studioirregular.libinappbilling.Product.ParsingException;
 
 public class InAppBilling {
 
-	private static final boolean DEBUG_LOG = true;
-	
 	private static final int USING_IAB_VERSION = 3;
 	
 	private final String PUBLIC_KEY;
@@ -53,8 +51,8 @@ public class InAppBilling {
 	
 	public void open(Context context) {
 		
-		if (DEBUG_LOG) {
-			Log.d(Constants.LOG_TAG, "InAppBilling::open");
+		if (Global.DEBUG_LOG) {
+			Log.d(Global.LOG_TAG, "InAppBilling::open");
 		}
 		
 		this.context = context;
@@ -65,8 +63,8 @@ public class InAppBilling {
 	
 	public void close() {
 		
-		if (DEBUG_LOG) {
-			Log.d(Constants.LOG_TAG, "InAppBilling::close");
+		if (Global.DEBUG_LOG) {
+			Log.d(Global.LOG_TAG, "InAppBilling::close");
 		}
 		
 		if (this.serviceConnection != null) {
@@ -97,8 +95,8 @@ public class InAppBilling {
 	public List<PurchasedItem> getPurchasedProducts(Product.Type type)
 			throws ServiceNotReadyException, NotSupportedException {
 		
-		if (DEBUG_LOG) {
-			Log.d(Constants.LOG_TAG, "InAppBilling::getPurchasedProducts type:" + type);
+		if (Global.DEBUG_LOG) {
+			Log.d(Global.LOG_TAG, "InAppBilling::getPurchasedProducts type:" + type);
 		}
 		
 		if (!isIabSupported(getService(), type)) {
@@ -107,9 +105,9 @@ public class InAppBilling {
 		}		
 		
 		Bundle purchases = getPurchases(getService(), type);
-		if (DEBUG_LOG) {
+		if (Global.DEBUG_LOG) {
 			for (String key : purchases.keySet()) {
-				Log.d(Constants.LOG_TAG,
+				Log.d(Global.LOG_TAG,
 						"\tpurchases[" + key + "]:" + purchases.get(key));
 			}
 		}
@@ -120,8 +118,8 @@ public class InAppBilling {
 	public boolean isProductPurchased(Product.Type type, String productId)
 			throws ServiceNotReadyException, NotSupportedException {
 		
-		if (DEBUG_LOG) {
-			Log.d(Constants.LOG_TAG, "InAppBilling::getPurchasedProducts type:"
+		if (Global.DEBUG_LOG) {
+			Log.d(Global.LOG_TAG, "InAppBilling::getPurchasedProducts type:"
 					+ type + ",productId:" + productId);
 		}
 		
@@ -140,8 +138,8 @@ public class InAppBilling {
 			Activity activity, int activityRequestCode)
 			throws ServiceNotReadyException, NotSupportedException, SendIntentException {
 		
-		if (DEBUG_LOG) {
-			Log.d(Constants.LOG_TAG, "InAppBilling::purchase type:" + type
+		if (Global.DEBUG_LOG) {
+			Log.d(Global.LOG_TAG, "InAppBilling::purchase type:" + type
 					+ ",productId:" + productId);
 		}
 		
@@ -151,8 +149,8 @@ public class InAppBilling {
 		}
 		
 		PendingIntent intent = getPurchaseIntent(type, productId);
-		if (DEBUG_LOG) {
-			Log.w(Constants.LOG_TAG, "purchaseIntent:" + intent);
+		if (Global.DEBUG_LOG) {
+			Log.w(Global.LOG_TAG, "purchaseIntent:" + intent);
 		}
 		
 		activity.startIntentSenderForResult(intent.getIntentSender(),
@@ -163,8 +161,8 @@ public class InAppBilling {
 	public boolean consume(Product.Type type, String productId)
 			throws ServiceNotReadyException, NotSupportedException {
 		
-		if (DEBUG_LOG) {
-			Log.d(Constants.LOG_TAG, "InAppBilling::consume type:" + type
+		if (Global.DEBUG_LOG) {
+			Log.d(Global.LOG_TAG, "InAppBilling::consume type:" + type
 					+ ",productId:" + productId);
 		}
 		
@@ -172,8 +170,8 @@ public class InAppBilling {
 		
 		final String purchaseToken = getPurchaseToken(purchases, productId);
 		if (purchaseToken == null) {
-			if (DEBUG_LOG) {
-				Log.e(Constants.LOG_TAG,
+			if (Global.DEBUG_LOG) {
+				Log.e(Global.LOG_TAG,
 						"InAppBilling::consume: cannot get valid purchase token for product:"
 								+ productId);
 			}
@@ -201,11 +199,11 @@ public class InAppBilling {
 	public List<Product> getProductDetails(Product.Type type,
 			String[] productIds) throws ServiceNotReadyException {
 		
-		if (DEBUG_LOG) {
-			Log.d(Constants.LOG_TAG, "InAppBilling::getProductDetails type:"
+		if (Global.DEBUG_LOG) {
+			Log.d(Global.LOG_TAG, "InAppBilling::getProductDetails type:"
 					+ type + ",products:");
 			for (String id : productIds) {
-				Log.d(Constants.LOG_TAG, "\t" + id);
+				Log.d(Global.LOG_TAG, "\t" + id);
 			}
 		}
 		
@@ -223,12 +221,12 @@ public class InAppBilling {
 		try {
 			bundle = api.execute(getService());
 		} catch (IllegalArgumentException e) {
-			if (DEBUG_LOG) {
+			if (Global.DEBUG_LOG) {
 				e.printStackTrace();
 			}
 			return new ArrayList<Product>();
 		} catch (RemoteException e) {
-			if (DEBUG_LOG) {
+			if (Global.DEBUG_LOG) {
 				e.printStackTrace();
 			}
 			return new ArrayList<Product>();
@@ -237,7 +235,7 @@ public class InAppBilling {
 		try {
 			return Product.parse(bundle);
 		} catch (ParsingException e) {
-			if (DEBUG_LOG) {
+			if (Global.DEBUG_LOG) {
 				e.printStackTrace();
 			}
 		}
@@ -252,8 +250,8 @@ public class InAppBilling {
 	 */
 	public ServerResponseCode onPurchaseActivityResult(Intent data) {
 		
-		if (DEBUG_LOG) {
-			Log.d(Constants.LOG_TAG,
+		if (Global.DEBUG_LOG) {
+			Log.d(Global.LOG_TAG,
 					"InAppBilling::onActivityResult data:" + data);
 		}
 		
@@ -265,7 +263,7 @@ public class InAppBilling {
 		try {
 			helper = new HandlePurchaseActivityResult(data);
 		} catch (IllegalArgumentException e) {
-			if (DEBUG_LOG) {
+			if (Global.DEBUG_LOG) {
 				e.printStackTrace();
 			}
 			return new ServerResponseCode(ServerResponseCode.INVALID_CODE_VALUE);
@@ -279,8 +277,8 @@ public class InAppBilling {
 		@Override
 		public void update(Observable observable, Object data) {
 			
-			if (DEBUG_LOG) {
-				Log.d(Constants.LOG_TAG,
+			if (Global.DEBUG_LOG) {
+				Log.d(Global.LOG_TAG,
 						"InAppBilling::serviceConnectionObserver::update data:" + data);
 			}
 			
@@ -296,8 +294,8 @@ public class InAppBilling {
 	
 	private void onServiceConnected() {
 		
-		if (DEBUG_LOG) {
-			Log.d(Constants.LOG_TAG, "onServiceConnected");
+		if (Global.DEBUG_LOG) {
+			Log.d(Global.LOG_TAG, "onServiceConnected");
 		}
 		
 		if (readyCallback != null) {
@@ -307,8 +305,8 @@ public class InAppBilling {
 	
 	private void onServiceDisconnected() {
 		
-		if (DEBUG_LOG) {
-			Log.d(Constants.LOG_TAG, "onServiceDisconnected");
+		if (Global.DEBUG_LOG) {
+			Log.d(Global.LOG_TAG, "onServiceDisconnected");
 		}
 		
 	}
@@ -341,15 +339,15 @@ public class InAppBilling {
 			response = api.execute(service);
 			
 			if (response == null) {
-				if (DEBUG_LOG) {
-					Log.e(Constants.LOG_TAG,
+				if (Global.DEBUG_LOG) {
+					Log.e(Global.LOG_TAG,
 							"InAppBilling::isIabSupported no response from API all.");
 				}
 			} else if (response.isOK()) {
 				return true;
 			} else {
-				if (DEBUG_LOG) {
-					Log.e(Constants.LOG_TAG,
+				if (Global.DEBUG_LOG) {
+					Log.e(Global.LOG_TAG,
 							"InAppBilling::isIabSupported response:"
 									+ response.value);
 				}
@@ -376,11 +374,11 @@ public class InAppBilling {
 		try {
 			result = api.execute(service);
 		} catch (IllegalArgumentException e) {
-			if (DEBUG_LOG) {
+			if (Global.DEBUG_LOG) {
 				e.printStackTrace();
 			}
 		} catch (RemoteException e) {
-			if (DEBUG_LOG) {
+			if (Global.DEBUG_LOG) {
 				e.printStackTrace();
 			}
 		}
@@ -396,18 +394,18 @@ public class InAppBilling {
 			helper.execute();
 			return helper.getPurchasedItemList();
 		} catch (IllegalArgumentException e) {
-			if (DEBUG_LOG) {
-				Log.e(Constants.LOG_TAG,
+			if (Global.DEBUG_LOG) {
+				Log.e(Global.LOG_TAG,
 						"processGetPurchasesResult: invalid bundle:"
 								+ bundle);
 				e.printStackTrace();
 			}
 		} catch (JSONException e) {
-			if (DEBUG_LOG) {
+			if (Global.DEBUG_LOG) {
 				e.printStackTrace();
 			}
 		} catch (SignatureVerificationException e) {
-			if (DEBUG_LOG) {
+			if (Global.DEBUG_LOG) {
 				e.printStackTrace();
 			}
 		}
@@ -434,7 +432,7 @@ public class InAppBilling {
 		}
 		
 		if (bundle == null) {
-			Log.e(Constants.LOG_TAG,
+			Log.e(Global.LOG_TAG,
 					"InAppBilling::getPurchaseIntent invalid bundle:"
 							+ bundle);
 			return null;
@@ -442,7 +440,7 @@ public class InAppBilling {
 		
 		HandleGetBuyIntentResult helper = new HandleGetBuyIntentResult(bundle);
 		if (!helper.isApiCallSuccess()) {
-			Log.e(Constants.LOG_TAG,
+			Log.e(Global.LOG_TAG,
 					"InAppBilling::getPurchaseIntent got error response:"
 							+ helper.getResponseCode());
 			return null;
@@ -461,8 +459,8 @@ public class InAppBilling {
 				if (state == PurchasedItem.PurchaseState.PURCHASED) {
 					return item.purchaseToken;
 				} else {
-					if (DEBUG_LOG) {
-						Log.w(Constants.LOG_TAG,
+					if (Global.DEBUG_LOG) {
+						Log.w(Global.LOG_TAG,
 								"getPurchaseToken product invalid purchase state:"
 										+ state);
 					}
