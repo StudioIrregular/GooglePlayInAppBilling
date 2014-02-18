@@ -136,7 +136,8 @@ public class InAppBilling {
 	
 	public void purchase(Product.Type type, String productId,
 			Activity activity, int activityRequestCode)
-			throws ServiceNotReadyException, NotSupportedException, SendIntentException {
+			throws NotSupportedException, ServiceNotReadyException,
+			RuntimeException, IabException, SendIntentException {
 		
 		if (Global.DEBUG_LOG) {
 			Log.d(Global.LOG_TAG, "InAppBilling::purchase type:" + type
@@ -148,9 +149,13 @@ public class InAppBilling {
 					"In app billing not supported for product type:" + type);
 		}
 		
-		PendingIntent intent = getPurchaseIntent(type, productId);
-		if (Global.DEBUG_LOG) {
-			Log.w(Global.LOG_TAG, "purchaseIntent:" + intent);
+		PendingIntent intent = getPurchaseIntent(getService(), type, productId);
+		
+		if (intent == null) {
+			if (Global.DEBUG_LOG) {
+				Log.e(Global.LOG_TAG, "InAppBilling::purchase Cannot obtain buy intent.");
+			}
+			throw new RuntimeException("InAppBilling::purchase Cannot obtain buy intent.");
 		}
 		
 		activity.startIntentSenderForResult(intent.getIntentSender(),
@@ -158,8 +163,9 @@ public class InAppBilling {
 				Integer.valueOf(0), Integer.valueOf(0));
 	}
 	
-	public boolean consume(Product.Type type, String productId)
-			throws ServiceNotReadyException, NotSupportedException {
+	public void consume(Product.Type type, String productId)
+			throws NotSupportedException, ServiceNotReadyException,
+			RuntimeException, IabException {
 		
 		if (Global.DEBUG_LOG) {
 			Log.d(Global.LOG_TAG, "InAppBilling::consume type:" + type
@@ -170,12 +176,14 @@ public class InAppBilling {
 		
 		final String purchaseToken = getPurchaseToken(purchases, productId);
 		if (purchaseToken == null) {
+			
 			if (Global.DEBUG_LOG) {
 				Log.e(Global.LOG_TAG,
 						"InAppBilling::consume: cannot get valid purchase token for product:"
 								+ productId);
 			}
-			return false;
+			
+			throw new RuntimeException("Cannot find token for product: productId");
 		}
 		
 		API_consumePurchase api = new API_consumePurchase();
@@ -187,17 +195,25 @@ public class InAppBilling {
 		try {
 			ServerResponseCode response = api.execute(getService());
 			
-			return response.isOK();
+			if (!response.isOK()) {
+				throw new IabException(response);
+			}
 		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
+			if (Global.DEBUG_LOG) {
+				e.printStackTrace();
+			}
+			throw e;
 		} catch (RemoteException e) {
-			e.printStackTrace();
+			if (Global.DEBUG_LOG) {
+				e.printStackTrace();
+			}
+			throw new RuntimeException(e);
 		}
-		return false;
 	}
 	
 	public List<Product> getProductDetails(Product.Type type,
-			String[] productIds) throws ServiceNotReadyException {
+			String[] productIds) throws ServiceNotReadyException,
+			RuntimeException {
 		
 		if (Global.DEBUG_LOG) {
 			Log.d(Global.LOG_TAG, "InAppBilling::getProductDetails type:"
@@ -224,12 +240,12 @@ public class InAppBilling {
 			if (Global.DEBUG_LOG) {
 				e.printStackTrace();
 			}
-			return new ArrayList<Product>();
+			throw e;
 		} catch (RemoteException e) {
 			if (Global.DEBUG_LOG) {
 				e.printStackTrace();
 			}
-			return new ArrayList<Product>();
+			throw new RuntimeException(e);
 		}
 		
 		try {
@@ -238,9 +254,8 @@ public class InAppBilling {
 			if (Global.DEBUG_LOG) {
 				e.printStackTrace();
 			}
+			throw e;
 		}
-		
-		return new ArrayList<Product>();
 	}
 	
 	/*
@@ -413,8 +428,8 @@ public class InAppBilling {
 		return new ArrayList<PurchasedItem>();
 	}
 	
-	private PendingIntent getPurchaseIntent(Product.Type type, String productId)
-			throws ServiceNotReadyException {
+	private PendingIntent getPurchaseIntent(IInAppBillingService service,
+			Product.Type type, String productId) throws RuntimeException, IabException {
 		
 		API_getBuyIntent api = new API_getBuyIntent();
 		api.setApiVersion(3);
@@ -424,26 +439,40 @@ public class InAppBilling {
 		
 		Bundle bundle = null;
 		try {
-			bundle = api.execute(getService());
+			bundle = api.execute(service);
 		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
+			if (Global.DEBUG_LOG) {
+				e.printStackTrace();
+			}
+			throw e;
 		} catch (RemoteException e) {
-			e.printStackTrace();
+			if (Global.DEBUG_LOG) {
+				e.printStackTrace();
+			}
+			throw new RuntimeException(e);
 		}
 		
 		if (bundle == null) {
-			Log.e(Global.LOG_TAG,
-					"InAppBilling::getPurchaseIntent invalid bundle:"
-							+ bundle);
-			return null;
+			if (Global.DEBUG_LOG) {
+				Log.e(Global.LOG_TAG,
+						"InAppBilling::getPurchaseIntent invalid bundle:"
+								+ bundle);
+			}
+			throw new RuntimeException("Failed to obtain buy intent.");
 		}
 		
 		HandleGetBuyIntentResult helper = new HandleGetBuyIntentResult(bundle);
 		if (!helper.isApiCallSuccess()) {
-			Log.e(Global.LOG_TAG,
-					"InAppBilling::getPurchaseIntent got error response:"
-							+ helper.getResponseCode());
-			return null;
+			
+			ServerResponseCode error = helper.getResponseCode();
+			
+			if (Global.DEBUG_LOG) {
+				Log.e(Global.LOG_TAG,
+						"InAppBilling::getPurchaseIntent got error response:"
+								+ error);
+			}
+			
+			throw new IabException(error);
 		}
 		
 		return helper.getPurchaseIntent();

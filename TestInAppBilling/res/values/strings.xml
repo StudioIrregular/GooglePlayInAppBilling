@@ -14,6 +14,6 @@
     <string name="purchased_list">Purchased Product List</string>
     <string name="consume">Consume</string>
     
-    <string name="purchase_canceled">User canceled purchasing</string>
+    <string name="purchase_canceled">Purchse canceled</string>
 
 </resources>

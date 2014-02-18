@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.studioirregular.libinappbilling.IabException;
 import com.studioirregular.libinappbilling.InAppBilling;
 import com.studioirregular.libinappbilling.InAppBilling.NotSupportedException;
 import com.studioirregular.libinappbilling.InAppBilling.ServiceNotReadyException;
@@ -93,9 +94,13 @@ public class TestInAppBilling extends Activity {
 		try {
 			iab.purchase(type, id, TestInAppBilling.this,
 					PURCHASE_ACITIVITY_CODE);
+		} catch (NotSupportedException e) {
+			e.printStackTrace();
 		} catch (ServiceNotReadyException e) {
 			e.printStackTrace();
-		} catch (NotSupportedException e) {
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+		} catch (IabException e) {
 			e.printStackTrace();
 		} catch (SendIntentException e) {
 			e.printStackTrace();
@@ -104,8 +109,17 @@ public class TestInAppBilling extends Activity {
 	
 	private void testConsume(Product.Type type, String id) {
 		
-		if (iab.consume(type, id)) {
+		try {
+			iab.consume(type, id);
 			removeProductFromPurchasedList(R.id.purchased_list, id);
+		} catch (NotSupportedException e) {
+			e.printStackTrace();
+		} catch (ServiceNotReadyException e) {
+			e.printStackTrace();
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+		} catch (IabException e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -116,11 +130,21 @@ public class TestInAppBilling extends Activity {
 			Log.d(TAG, "\t" + id);
 		}
 		
-		List<Product> products = iab.getProductDetails(type, PRODUCT_ID_LIST);
+		List<Product> products = null;
 		
-		for (Product product : products) {
-			Log.d(TAG, product.toString());
-			Log.d(TAG, "=====================================");
+		try {
+			products = iab.getProductDetails(type, PRODUCT_ID_LIST);
+		} catch (ServiceNotReadyException e) {
+			e.printStackTrace();
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+		}
+		
+		if (products != null) {
+			for (Product product : products) {
+				Log.d(TAG, product.toString());
+				Log.d(TAG, "=====================================");
+			}
 		}
 	}
 	

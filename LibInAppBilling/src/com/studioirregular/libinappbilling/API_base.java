@@ -49,7 +49,7 @@ public abstract class API_base <ResultType> {
 		
 		checkArguments();
 		
-		if (LOG_API_EXECUTION_TIME) {
+		if (Global.LOG_API_EXECUTION_TIME) {
 			if (stopWatch == null) {
 				stopWatch = new StopWatch();
 			}
@@ -58,7 +58,7 @@ public abstract class API_base <ResultType> {
 		
 		ResultType result = callAPI(service);
 		
-		if (LOG_API_EXECUTION_TIME) {
+		if (Global.LOG_API_EXECUTION_TIME) {
 			final long executionTime = stopWatch.stop();
 			Log.w(Global.LOG_TAG, DEBUG_NAME() + " executionTime:" + executionTime);
 		}
@@ -71,6 +71,5 @@ public abstract class API_base <ResultType> {
 	
 	protected static final int MINIMUM_API_VERSION = 3;
 	
-	private static final boolean LOG_API_EXECUTION_TIME = true;
 	private StopWatch stopWatch;
 }
