@@ -262,8 +262,11 @@ public class InAppBilling {
 	 * Pass onActivityResult to me if request code equals the one client pass to
 	 * purchase API. When user canceled the purchase, client can get this info
 	 * through result code or ServerResponseCode.
+	 * 
+	 * Return id of the purchased product when success.
 	 */
-	public ServerResponseCode onPurchaseActivityResult(Intent data) {
+	public PurchasedItem onPurchaseActivityResult(Intent data)
+			throws IabException, SignatureVerificationException, JSONException {
 		
 		if (Global.DEBUG_LOG) {
 			Log.d(Global.LOG_TAG,
@@ -271,7 +274,7 @@ public class InAppBilling {
 		}
 		
 		if (data == null) {
-			return new ServerResponseCode(ServerResponseCode.INVALID_CODE_VALUE);
+			throw new IabException(new ServerResponseCode(ServerResponseCode.INVALID_CODE_VALUE));
 		}
 		
 		HandlePurchaseActivityResult helper = null;
@@ -281,10 +284,15 @@ public class InAppBilling {
 			if (Global.DEBUG_LOG) {
 				e.printStackTrace();
 			}
-			return new ServerResponseCode(ServerResponseCode.INVALID_CODE_VALUE);
+			throw new IabException(new ServerResponseCode(ServerResponseCode.INVALID_CODE_VALUE));
 		}
 		
-		return helper.getResponseCode();
+		ServerResponseCode response= helper.getResponseCode();
+		if (!response.isOK()) {
+			throw new IabException(response);
+		}
+		
+		return helper.getPurchasedItem(PUBLIC_KEY);
 	}
 	
 	private Observer serviceConnectionObserver = new Observer() {

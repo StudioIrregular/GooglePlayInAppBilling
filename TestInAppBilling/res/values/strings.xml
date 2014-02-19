@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">TestInAppBilling</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_test_coin">Test Coins</string>
     <string name="hello_world">Hello world!</string>
     <string name="purchased">purchased</string>
     <string name="canceled">canceled</string>
@@ -15,5 +15,15 @@
     <string name="consume">Consume</string>
     
     <string name="purchase_canceled">Purchse canceled</string>
+    
+    <string name="coin">Coin</string>
+    
+    <string name="zero">0</string>
+    
+    <string name="buy_10_coins">Buy 10 Coins</string>
+    
+    <string name="buy_100_coins">Buy 100 Coins</string>
+    
+    <string name="buy_1000_coins">Buy 1000 Coins</string>
 
 </resources>

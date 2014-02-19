@@ -3,11 +3,15 @@ package com.studioirregular.testinappbilling;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONException;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
@@ -21,7 +25,7 @@ import com.studioirregular.libinappbilling.InAppBilling.NotSupportedException;
 import com.studioirregular.libinappbilling.InAppBilling.ServiceNotReadyException;
 import com.studioirregular.libinappbilling.Product;
 import com.studioirregular.libinappbilling.PurchasedItem;
-import com.studioirregular.libinappbilling.ServerResponseCode;
+import com.studioirregular.libinappbilling.SignatureVerificationException;
 
 public class TestInAppBilling extends Activity {
 
@@ -70,6 +74,24 @@ public class TestInAppBilling extends Activity {
 	}
 	
 	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		
+		if (item.getItemId() == R.id.action_test_coin) {
+			Intent testCoin = new Intent(TestInAppBilling.this, TestCoins.class);
+			startActivity(testCoin);
+			return true;
+		}
+		
+		return false;
+	}
+
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		
 		Log.d(TAG, "onActivityResult requestCode:" + requestCode
@@ -78,9 +100,20 @@ public class TestInAppBilling extends Activity {
 		if (requestCode == PURCHASE_ACITIVITY_CODE) {
 			
 			if (resultCode == Activity.RESULT_OK) {
-				ServerResponseCode response = iab.onPurchaseActivityResult(data);
-				Log.w(TAG, "Purchase response:" + response);
-				updatePurchasedProducts();
+				try {
+					PurchasedItem item = iab.onPurchaseActivityResult(data);
+					Log.w(TAG, "Purchase item:" + item);
+					if (item != null) {
+						updatePurchasedProducts();
+					}
+				} catch (IabException e) {
+					e.printStackTrace();
+				} catch (SignatureVerificationException e) {
+					e.printStackTrace();
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
 			} else if (resultCode == Activity.RESULT_CANCELED) {
 				Log.w(TAG, "onActivityResult: user canceled purchasing.");
 				Toast.makeText(TestInAppBilling.this, R.string.purchase_canceled, Toast.LENGTH_LONG).show();

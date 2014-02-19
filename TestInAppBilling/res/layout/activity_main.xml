@@ -63,9 +63,9 @@
         android:id="@+id/get_sku_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/consume"
-        android:layout_below="@+id/consume"
-        android:layout_marginTop="24dp"
+        android:layout_alignLeft="@+id/purchase"
+        android:layout_below="@+id/purchase"
+        android:layout_marginTop="14dp"
         android:text="@string/get_sku_details" />
 
     <TextView
@@ -74,7 +74,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/get_sku_details"
         android:layout_below="@+id/get_sku_details"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="14dp"
         android:text="@string/purchased_list" />
 
 </RelativeLayout>

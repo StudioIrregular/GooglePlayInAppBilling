@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="26dp"
+        android:text="@string/coin"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <Button
+        android:id="@+id/buy_coin_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_below="@+id/textView1"
+        android:layout_marginTop="45dp"
+        android:text="@string/buy_10_coins" />
+
+    <TextView
+        android:id="@+id/coin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buy_coin_1"
+        android:layout_marginLeft="22dp"
+        android:layout_toRightOf="@+id/textView1"
+        android:text="@string/zero"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <Button
+        android:id="@+id/buy_coin_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/buy_coin_1"
+        android:layout_below="@+id/buy_coin_1"
+        android:layout_marginTop="23dp"
+        android:text="@string/buy_100_coins" />
+
+    <Button
+        android:id="@+id/buy_coin_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/buy_coin_2"
+        android:layout_below="@+id/buy_coin_2"
+        android:layout_marginTop="27dp"
+        android:text="@string/buy_1000_coins" />
+
+</RelativeLayout>
